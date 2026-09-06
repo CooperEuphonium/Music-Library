@@ -6,11 +6,9 @@
     "difficulty": "Advanced",
     "instrument": "Euphonium Solo",
     "composer": "Hans Zimmer",
-    "tags": [
-      "Euphonium",
-      "Movie"
-    ],
+    "tags": ["Euphonium", "Movie"],
     "pdf": "TASM2.pdf",
+    "thumbnail": "Untitled design (9).png",
     "free": true
   },
   {
@@ -20,11 +18,9 @@
     "difficulty": "Intermediate",
     "instrument": "Euphonium Solo",
     "composer": "David Fleming",
-    "tags": [
-      "Solo",
-      "Cover"
-    ],
+    "tags": ["Solo", "Cover"],
     "pdf": "Last Son Euphonium.pdf",
+    "thumbnail": "Untitled design (8).png",
     "free": true
   }
 ]
