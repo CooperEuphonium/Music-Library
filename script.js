@@ -49,10 +49,14 @@ function card(item) {
     .filter(Boolean)
     .map(t => `<span class="tag">${t}</span>`).join("");
 
+  const topVisual = item.thumbnail
+    ? `<img class="card-thumb" src="${item.thumbnail}" alt="${item.title} thumbnail" />`
+    : `<div class="card-icon">♫</div>`;
+
   article.innerHTML = `
-    <div class="card-top">
+    <div class="card-top ${item.thumbnail ? "has-thumb" : ""}">
+      ${topVisual}
       <div class="tag-row">${tags}</div>
-      <div class="card-icon">♫</div>
     </div>
     <div class="card-body">
       <h3>${item.title}</h3>
@@ -82,9 +86,6 @@ function render() {
 function openPreview(item) {
   modalTitle.textContent = item.title;
   modalMeta.textContent = [item.instrument, item.difficulty].filter(Boolean).join(" • ");
-
-  // Preview the same-origin GitHub Pages PDF directly in the iframe.
-  // The separate PDF button keeps the explicit download behavior.
   const absolutePdfUrl = new URL(item.pdf, window.location.href).href;
   pdfFrame.src = absolutePdfUrl + "#toolbar=1&navpanes=0&view=FitH";
   modal.showModal();
@@ -111,7 +112,6 @@ fetch("arrangements.json")
     arrangements = data;
     populateFilters();
     render();
-
     document.getElementById("stat-total").textContent = arrangements.length;
     document.getElementById("stat-categories").textContent = uniqueValues("category").length;
     document.getElementById("stat-free").textContent = arrangements.filter(x => x.free !== false).length;
