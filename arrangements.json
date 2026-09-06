@@ -22,5 +22,17 @@
     "pdf": "Last Son Euphonium.pdf",
     "thumbnail": "Untitled design (8).png",
     "free": true
+  },
+  {
+    "title": "Duel of the Euphs",
+    "subtitle": "A euphonium quartet arrangement of \"Duel of the Fates\" by John Williams",
+    "category": "Movies & TV",
+    "difficulty": "Advanced",
+    "instrument": "Euphonium Quartet",
+    "composer": "John Williams",
+    "tags": ["Euphonium", "Star Wars"],
+    "pdf": "Duel of the Euphs.pdf",
+    "thumbnail": "Untitled design (10).png",
+    "free": true
   }
 ]
