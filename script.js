@@ -83,10 +83,10 @@ function openPreview(item) {
   modalTitle.textContent = item.title;
   modalMeta.textContent = [item.instrument, item.difficulty].filter(Boolean).join(" • ");
 
-  // Use Google's embedded document viewer for previews so browser PDF settings
-  // don't turn the Preview button into a download.
+  // Preview the same-origin GitHub Pages PDF directly in the iframe.
+  // The separate PDF button keeps the explicit download behavior.
   const absolutePdfUrl = new URL(item.pdf, window.location.href).href;
-  pdfFrame.src = `https://docs.google.com/gview?embedded=1&url=${encodeURIComponent(absolutePdfUrl)}`;
+  pdfFrame.src = absolutePdfUrl + "#toolbar=1&navpanes=0&view=FitH";
   modal.showModal();
 }
 
