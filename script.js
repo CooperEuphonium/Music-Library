@@ -82,7 +82,11 @@ function render() {
 function openPreview(item) {
   modalTitle.textContent = item.title;
   modalMeta.textContent = [item.instrument, item.difficulty].filter(Boolean).join(" • ");
-  pdfFrame.src = item.pdf;
+
+  // Use Google's embedded document viewer for previews so browser PDF settings
+  // don't turn the Preview button into a download.
+  const absolutePdfUrl = new URL(item.pdf, window.location.href).href;
+  pdfFrame.src = `https://docs.google.com/gview?embedded=1&url=${encodeURIComponent(absolutePdfUrl)}`;
   modal.showModal();
 }
 
