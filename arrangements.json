@@ -1,5 +1,19 @@
 [
   {
+    "title": "TASM2 Main Theme",
+    "subtitle": "Main theme arranged for euphonium",
+    "category": "Movies & TV",
+    "difficulty": "Advanced",
+    "instrument": "Euphonium Solo",
+    "composer": "Hans Zimmer",
+    "tags": [
+      "Euphonium",
+      "Movie"
+    ],
+    "pdf": "https://raw.githubusercontent.com/CooperEuphonium/Music-Library/main/TASM2.pdf",
+    "free": true
+  },
+  {
     "title": "Last Son",
     "subtitle": "Euphonium arrangement",
     "category": "Movies & TV",
