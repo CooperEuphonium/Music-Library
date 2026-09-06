@@ -1,93 +1,120 @@
-# Cooper Matthews Music — Arrangement Library
+let arrangements = [];
+let state = { search: "", category: "all", difficulty: "all" };
 
-This site is built so you can add music without touching the page layout.
+const grid = document.getElementById("library-grid");
+const empty = document.getElementById("empty-state");
+const resultCount = document.getElementById("result-count");
+const searchInput = document.getElementById("search-input");
+const categoryFilter = document.getElementById("category-filter");
+const difficultyFilter = document.getElementById("difficulty-filter");
 
-## 1. Add a PDF
+const modal = document.getElementById("pdf-modal");
+const modalClose = document.getElementById("modal-close");
+const modalTitle = document.getElementById("modal-title");
+const modalMeta = document.getElementById("modal-meta");
+const pdfFrame = document.getElementById("pdf-frame");
 
-Put the PDF inside the `pdfs/` folder.
-
-Example:
-
-`pdfs/my-new-arrangement.pdf`
-
-## 2. Add it to arrangements.json
-
-Open `arrangements.json` and copy one of the existing entries.
-
-Example:
-
-```json
-{
-  "title": "My New Arrangement",
-  "subtitle": "Short description here",
-  "category": "Movies & TV",
-  "difficulty": "Intermediate",
-  "instrument": "Euphonium Solo",
-  "composer": "Composer Name",
-  "tags": ["Euphonium", "Movie"],
-  "pdf": "pdfs/my-new-arrangement.pdf",
-  "free": true
+function uniqueValues(key) {
+  return [...new Set(arrangements.map(x => x[key]).filter(Boolean))].sort();
 }
-```
 
-Save the file. The website automatically adds the new card and updates the search/filter menus.
+function populateFilters() {
+  uniqueValues("category").forEach(value => {
+    const opt = document.createElement("option");
+    opt.value = value; opt.textContent = value;
+    categoryFilter.appendChild(opt);
+  });
+  uniqueValues("difficulty").forEach(value => {
+    const opt = document.createElement("option");
+    opt.value = value; opt.textContent = value;
+    difficultyFilter.appendChild(opt);
+  });
+}
 
-## 3. Change your TikTok and Instagram links
+function matches(item) {
+  const haystack = [
+    item.title, item.subtitle, item.category, item.difficulty,
+    item.instrument, item.composer, ...(item.tags || [])
+  ].join(" ").toLowerCase();
 
-Open `index.html`.
+  return haystack.includes(state.search.toLowerCase())
+    && (state.category === "all" || item.category === state.category)
+    && (state.difficulty === "all" || item.difficulty === state.difficulty);
+}
 
-Find:
+function card(item) {
+  const article = document.createElement("article");
+  article.className = "music-card";
+  const tags = [item.category, item.difficulty, ...(item.tags || []).slice(0, 2)]
+    .filter(Boolean)
+    .map(t => `<span class="tag">${t}</span>`).join("");
 
-`https://www.tiktok.com/`
+  article.innerHTML = `
+    <div class="card-top">
+      <div class="tag-row">${tags}</div>
+      <div class="card-icon">♫</div>
+    </div>
+    <div class="card-body">
+      <h3>${item.title}</h3>
+      <p class="subtitle">${item.subtitle || ""}</p>
+      <div class="meta">
+        ${item.instrument ? `<span>🎺 ${item.instrument}</span>` : ""}
+        ${item.composer ? `<span>✍️ ${item.composer}</span>` : ""}
+      </div>
+      <div class="card-actions">
+        <button class="preview">Preview</button>
+        <a class="download" href="${item.pdf}" download>PDF ↓</a>
+      </div>
+    </div>`;
 
-and
+  article.querySelector(".preview").addEventListener("click", () => openPreview(item));
+  return article;
+}
 
-`https://www.instagram.com/`
+function render() {
+  const filtered = arrangements.filter(matches);
+  grid.innerHTML = "";
+  filtered.forEach(item => grid.appendChild(card(item)));
+  resultCount.textContent = `${filtered.length} ${filtered.length === 1 ? "piece" : "pieces"}`;
+  empty.hidden = filtered.length !== 0;
+}
 
-Replace those with your real profile links.
+function openPreview(item) {
+  modalTitle.textContent = item.title;
+  modalMeta.textContent = [item.instrument, item.difficulty].filter(Boolean).join(" • ");
+  pdfFrame.src = item.pdf;
+  modal.showModal();
+}
 
-## 4. Change the site name
+modalClose.addEventListener("click", () => {
+  modal.close();
+  pdfFrame.src = "";
+});
+modal.addEventListener("click", e => {
+  if (e.target === modal) {
+    modal.close();
+    pdfFrame.src = "";
+  }
+});
 
-Search `index.html` for `Cooper Matthews Music` and replace it with whatever brand name you want.
+searchInput.addEventListener("input", e => { state.search = e.target.value; render(); });
+categoryFilter.addEventListener("change", e => { state.category = e.target.value; render(); });
+difficultyFilter.addEventListener("change", e => { state.difficulty = e.target.value; render(); });
 
-## 5. Preview locally
+fetch("arrangements.json")
+  .then(r => r.json())
+  .then(data => {
+    arrangements = data;
+    populateFilters();
+    render();
 
-Because the site loads `arrangements.json`, it works best through a small local web server instead of double-clicking index.html.
+    document.getElementById("stat-total").textContent = arrangements.length;
+    document.getElementById("stat-categories").textContent = uniqueValues("category").length;
+    document.getElementById("stat-free").textContent = arrangements.filter(x => x.free !== false).length;
+  })
+  .catch(err => {
+    console.error(err);
+    resultCount.textContent = "Could not load arrangements.json";
+  });
 
-If Python is installed, open a terminal in this folder and run:
-
-`python -m http.server 8000`
-
-Then visit:
-
-`http://localhost:8000`
-
-## 6. Put it online free
-
-### GitHub Pages
-1. Create a GitHub repository.
-2. Upload everything in this folder.
-3. Open repository Settings → Pages.
-4. Deploy from the main branch.
-5. GitHub gives you a public URL.
-
-### Cloudflare Pages
-1. Create a Cloudflare Pages project.
-2. Connect your GitHub repository.
-3. Use no build command.
-4. Set the output directory to `/`.
-5. Deploy.
-
-## Copyright reminder
-
-Only directly host PDFs you have the right to distribute. For copyrighted arrangements you do not have distribution permission for, replace the PDF link with a legal publisher/product link instead.
-
-
-## Your current PDF filenames
-
-For the two existing arrangements, upload the PDFs to the `pdfs` folder with these exact names:
-
-- `Last Son Euphonium.pdf`
-- `TASM2.pdf`
-
-The website is already configured to look for those exact filenames.
+document.getElementById("year").textContent = new Date().getFullYear();
