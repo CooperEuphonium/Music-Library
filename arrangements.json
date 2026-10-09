@@ -59,5 +59,20 @@
     "pdf": "Aria Math.pdf",
     "thumbnail": "Your paragraph text.png",
     "free": true
+  },
+  {
+    "title": "Test Drive",
+    "subtitle": "How to Train Your Dragon theme arranged for four euphoniums",
+    "category": "Movies & TV",
+    "difficulty": "Advanced",
+    "instrument": "Euphonium Quartet",
+    "composer": "John Powell (arr. Cooper Matthews)",
+    "tags": [
+      "Euphonium",
+      "How to Train Your Dragon"
+    ],
+    "pdf": "Test Drive.pdf",
+    "thumbnail": "Your paragraph text (1).png",
+    "free": true
   }
 ]
